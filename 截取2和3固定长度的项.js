@@ -20,10 +20,8 @@ let i = 0
     while (arr.length>0) {
       if(i%2 === 0 ) {
         newListArr1.push(arr.splice(0,2))
-        console.log('偶数循环',newListArr1,arr)
       }else {
         newListArr1.push(arr.splice(0,3))
-        console.log('奇数数循环',newListArr1,arr)
       }
       i++
     }
