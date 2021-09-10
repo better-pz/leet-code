@@ -25,4 +25,4 @@ let i = 0
       }
       i++
     }
-console.log(222,newListArr1)
+console.log(newListArr1)
