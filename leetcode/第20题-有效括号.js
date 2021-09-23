@@ -9,52 +9,52 @@
  * @param {string} s
  * @return {boolean}
  */
-// var isValid = function(s) {
-//   const track = [],
-//       map = {
-//           "(":")",
-//           "{":"}",
-//           "[":"]"
-//       };
-//   for(const x of s) {
-//       if(x in map) {
-//           track.push(x);
-//           continue;
-//       };
-//       if(map[track.pop()] !== x) return false;
-//   }
-//   return !track.length;
-// };
+var isValid = function(s) {
+  if (s.length % 2 === 1) return false;
+    const track = []
+    const map = new Map
+    map.set('(',')')
+    map.set('{','}')
+    map.set('[',']')
+    for (const x of s) {
+      if (map.has(x)) {
+        track.push(x);
+      }else if (map.get(track.pop())!== x){
+          return false;
+      }
+    }
+    return !track.length;
+  };
 
 /*  先取出s[i],1.是左括号，入栈;
                2.是右括号,2.1若此时栈空,则出错;2.2否则出栈顶元素,并和s[i]匹配,2.2.1若成功,栈顶出栈,2.2.2.否则报错,
                3.最后判断栈是否为空 */
-const isValid = function(s) {
-  if (s.length % 2 === 1) return false;
+// const isValid = function(s) {
+//   if (s.length % 2 === 1) return false;
 
-  const track = [];
-  // 通过数组模拟栈数据结构 先进后出
-  for (let i = 0; i < s.length; i++) {
-    const item = s[i];
-    // 如果是左括号就进栈
-    if (item === "{" || item === "[" || item === "(") {
-      track.push(item);
-    } else {
-      // 若为右括号 ,若栈空时,返回一个false
-      if (track.length === 0) return false;
-      let s = track[track.length - 1];
-      if (
-        (item === "}" && s === "{") ||
-        (item === "]" && s === "[") ||
-        (item === ")" && s === "(")
-      ) {
-        track.pop();
-      } else {
-        return false;
-      }
-    }
-  }
-  return track.length === 0;
-};
+//   const track = [];
+//   // 通过数组模拟栈数据结构 先进后出
+//   for (let i = 0; i < s.length; i++) {
+//     const item = s[i];
+//     // 如果是左括号就进栈
+//     if (item === "{" || item === "[" || item === "(") {
+//       track.push(item);
+//     } else {
+//       // 若为右括号 ,若栈空时,返回一个false
+//       if (track.length === 0) return false;
+//       let s = track[track.length - 1];
+//       if (
+//         (item === "}" && s === "{") ||
+//         (item === "]" && s === "[") ||
+//         (item === ")" && s === "(")
+//       ) {
+//         track.pop();
+//       } else {
+//         return false;
+//       }
+//     }
+//   }
+//   return track.length === 0;
+// };
 
-console.log('isValid',isValid('(){{{}}}[[]]'))
+console.log("isValid", isValid("(){{{}}}[[]]"));

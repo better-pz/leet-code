@@ -4,7 +4,6 @@ const setTag = '[object Set]';
 const arrayTag = '[object Array]';
 const objectTag = '[object Object]';
 const argsTag = '[object Arguments]';
-
 const boolTag = '[object Boolean]';
 const dateTag = '[object Date]';
 const numberTag = '[object Number]';
@@ -13,9 +12,7 @@ const symbolTag = '[object Symbol]';
 const errorTag = '[object Error]';
 const regexpTag = '[object RegExp]';
 const funcTag = '[object Function]';
-
 const deepTag = [mapTag, setTag, arrayTag, objectTag, argsTag];
-
 
 function forEach(array, iteratee) {
     let index = -1;
