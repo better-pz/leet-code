@@ -23,8 +23,21 @@ var isValid = function(s) {
           return false;
       }
     }
+    // for (const x of s) {
+    //   if (map.has(x)) {
+    //     track.push(x);
+    //   } else {
+    //     const t = track[track.length - 1];
+    //     if (map.get(t) === x) {
+    //       track.pop();
+    //     } else {
+    //       return false;
+    //     }
+    //   }
+    // }
     return !track.length;
   };
+
 
 /*  先取出s[i],1.是左括号，入栈;
                2.是右括号,2.1若此时栈空,则出错;2.2否则出栈顶元素,并和s[i]匹配,2.2.1若成功,栈顶出栈,2.2.2.否则报错,
