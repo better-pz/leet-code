@@ -69,7 +69,7 @@ function deeCloneMap(source, map = new Map()) {
     for (let key in source) {
       if (source.hasOwnProperty(key)) {
         // 如果属性是对象类型则递归再次遍历赋值
-        target[key] = deeCloneMap(source[key],map);
+        target[key] = deeCloneMap(source[key], map);
       }
     }
     return target;
@@ -78,7 +78,7 @@ function deeCloneMap(source, map = new Map()) {
   }
 }
 const deepResult2 = deeCloneMap(textObject2);
-console.log('mapClone', deepResult2)
+console.log("mapClone", deepResult2);
 // 深拷贝2.1 使用是WeakMap弱引用关系，当下一次垃圾回收机制执行时，这块内存就会被释放掉。
 
 function deeCloneWeakMap(source, map = new WeakMap()) {
@@ -94,7 +94,7 @@ function deeCloneWeakMap(source, map = new WeakMap()) {
     for (let key in source) {
       if (source.hasOwnProperty(key)) {
         // 如果属性是对象类型则递归再次遍历赋值
-        target[key] = deeCloneMap(source[key],map);
+        target[key] = deeCloneMap(source[key], map);
       }
     }
     return target;
@@ -104,16 +104,23 @@ function deeCloneWeakMap(source, map = new WeakMap()) {
 }
 // while循环的性能高 使用while来实现一个通用的forEach遍历，iteratee是遍历的回掉函数，他可以接收每次遍历的value和index两个参数：
 function forEach(array, iteratee) {
-  let index = -1
-  const length = array.length
+  let index = -1;
+  const length = array.length;
   while (++index < length) {
     iteratee(array[index], index);
   }
-  return array
+  return array;
 }
 // 深拷贝3.0 使用是WeakMap弱引用关系，当下一次垃圾回收机制执行时，这块内存就会被释放掉。
 
 function deeCloneWhile(source, map = new WeakMap()) {
+  // 1.判断是否为null 或undefined
+  if (typeof source == null) return source;
+  // 2.判断是否为日期Date
+  if (source instanceof Date) return new Date(osourcebj);
+  // 3.判断是否为正则 typeof /\d+/ === 'object'
+  if (source instanceof RegExp) return new RegExp(source);
+
   if (typeof source === "object") {
     const isArray = Array.isArray(source);
     let target = isArray ? [] : {};
@@ -125,12 +132,12 @@ function deeCloneWhile(source, map = new WeakMap()) {
     // 没有 - 将当前对象作为key，克隆对象作为value进行存储
     const keys = isArray ? undefined : Object.keys(source);
     map.set(source, target);
-    forEach(keys || source , (value,key)=>{
+    forEach(keys || source, (value, key) => {
       if (keys) {
-        key = value
+        key = value;
       }
-      target[key] = deeCloneWhile(source[key],map);
-    })
+      target[key] = deeCloneWhile(source[key], map);
+    });
     // for (let key in source) {
     //   if (source.hasOwnProperty(key)) {
     //     // 如果属性是对象类型则递归再次遍历赋值
@@ -146,11 +153,13 @@ const textObject3 = {
   field1: 1,
   field2: undefined,
   field3: {
-      child: 'child'
+    child: "child",
   },
   field4: [2, 4, 8],
-  f: { f: { f: { f: { f: { f: { f: { f: { f: { f: { f: { f: {} } } } } } } } } } } },
+  f: {
+    f: { f: { f: { f: { f: { f: { f: { f: { f: { f: { f: {} } } } } } } } } } },
+  },
 };
 textObject3.textObject3 = textObject3;
 const deepResult3 = deeCloneWhile(textObject3);
-console.log('deeCloneWhile', deepResult3)
+console.log("deeCloneWhile", deepResult3);
