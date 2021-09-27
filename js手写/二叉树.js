@@ -27,14 +27,14 @@ const binaryTree = {
     },
   },
 };
-// 递归
+// 先序(遍历)
 const preorder1 = (root) => {
   if (!root) return;
   console.log(root.val);
   preorder1(root.left);
   preorder1(root.right);
 };
-// 非递归
+// 先序遍历(非递归)
 const preorder2 = (root) => {
   if (!root) return;
   const stack = [root];
@@ -46,14 +46,14 @@ const preorder2 = (root) => {
   }
 };
 // preorder2(binaryTree);
-
+// 中序遍历(递归)
 const inorder1 = (root) => {
   if (!root) return;
   inorder1(root.left);
   console.log(root.val);
   inorder1(root.right);
 };
-
+// 中序遍历(非递归)
 const inorder2 = (root) => {
   if (!root) return;
   const stack = [];
@@ -68,12 +68,29 @@ const inorder2 = (root) => {
     p = n.right;
   }
 };
-inorder2(binaryTree)
-
-const postorder = (root) => {
+// inorder2(binaryTree)
+// 后序遍历 (递归)
+const postorder1 = (root) => {
   if (!root) return;
-  postorder(root.left);
-  postorder(root.right);
+  postorder1(root.left);
+  postorder1(root.right);
   console.log(root.val);
 };
-// postorder(binaryTree);
+postorder1(binaryTree);
+// 后序遍历 (非递归)
+const postorder2 = (root) => {
+  if (!root) return;
+  const outputStack = [];
+  const stack = [root];
+  while (stack.length) {
+    const n = stack.pop();
+    outputStack.push(n);
+    if (n.left) stack.push(n.left);
+    if (n.right) stack.push(n.right);
+  }
+  while (outputStack.length) {
+    const n = outputStack.pop();
+    console.log(n.val);
+  }
+};
+postorder2(binaryTree);
