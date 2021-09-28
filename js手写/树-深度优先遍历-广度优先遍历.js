@@ -37,6 +37,7 @@ const tree = {
     }
   ]
 }
+// 深度优先遍历
 const dfs =(root) => {
   console.log(root.val)
   root.children.forEach(dfs)
@@ -44,7 +45,7 @@ const dfs =(root) => {
 
 // dfs(tree)
 
-
+// 广度优先遍历
 const bfc = (root) => {
   const q = [root]
   while (q.length > 0) {
