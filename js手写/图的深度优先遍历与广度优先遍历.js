@@ -4,7 +4,8 @@ const graph = {
   2:[0,3],
   3:[3]
 }
-const visited = new Set()
+// const visited = new Set()
+// 深度优先遍历
 const dfs = n => {
   console.log(n)
   visited.add(n)
@@ -14,4 +15,24 @@ const dfs = n => {
     }
   })
 }
-dfs(2)
+// dfs(2)
+
+// 广度优先遍历
+
+
+const bfs = node => {
+  const visited = new Set()
+  visited.add(node)
+  const q = [node]
+  while (q.length) {
+    const n = q.shift()
+    console.log(n)
+    graph[n].forEach(c => {
+      if(!visited.has(c)) {
+        q.push(c)
+        visited.add(c)
+      }
+    })
+  }
+}
+bfs(2)
