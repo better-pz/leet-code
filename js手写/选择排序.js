@@ -6,9 +6,11 @@ Array.prototype.selectionSort = function() {
         indexMin = j;
       }
     }
-    const temp = this[i];
-    this[i] = this[indexMin];
-    this[indexMin] = temp;
+    if (indexMin !== i) {
+      const temp = this[i];
+      this[i] = this[indexMin];
+      this[indexMin] = temp;
+    }
   }
 };
 const arr = [2, 3, 4, 1, 7, 5];
