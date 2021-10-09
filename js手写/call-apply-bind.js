@@ -37,18 +37,30 @@ function text (a,b,c) {
   return '我是better'
 }
 Function.prototype.mybind = function() {
-  // 截取第一个参数
+      //判断调用bind的 是不是函数，抛出异常
+      if(typeof this !== "function"){
+        throw new Error("function.prototype.bind - what is trying to be bound is not  callable")
+    }
+
+  // 将类数组的参数转换成数组然后截取第一个参数
+  // const argsArr =Array.prototype.slice.call(arguments)
   const argsArr =[...arguments] 
   const args = argsArr.shift()
-  
-  console.log('第一个参数',args)
   const self = this
-  return function () {
-    return self.apply (args,argsArr)
+  const fToBind = function () {
+    console.log('返回函数的参数',arguments)
+    const isNew = this instanceof fToBind // this是否是fToBind的实例 也就是返回的fToBind是否通过new调用
+    const context = isNew ? this : Object(args) // new调用就绑定到this上,否则就绑定到传入的objThis上
+    return self.apply (context,argsArr.concat([...arguments]))
   }
+  if(self.prototype) {
+    // 复制源函数的prototype给fToBind 一些情况下函数没有prototype，比如箭头函数
+    fToBind.prototype = Object.create(self.prototype)
+  }
+  return fToBind
 }
 const result = text(1,10,100)
-const bindResult = text.mybind({name:'better'},7,77,777)()
+const bindResult = text.mybind({name:'better'},7,77,777)(1)
 console.log('手写bind',result,bindResult)
 
 
