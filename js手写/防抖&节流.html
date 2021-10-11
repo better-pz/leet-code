@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>防抖节流</title>
+</head>
+
+<body>
+  <input id="unDebounce" type="text" />
+  <div id="div" style="width: 400px;height: 400px; background-color: pink;"></div>
+</body>
+<script>
+  // 立即执行版的意思是触发事件后函数会立即执行，然后 n 秒内不触发事件才能继续执行函数的效果。
+  function debounce(handle, delay, immediate) {
+    let timer = null;
+    return function () {
+      timer && clearTimeout(timer)
+      const self = this
+      const args = [...arguments];
+      // 需要立即执行
+      if (immediate) {
+        const callNow = !timer;
+        timer = setTimeout(() => {
+          handle.call(self, ...args)
+          timer = null // 定时将timer清空为null 下次触发时callNow为true可以直接理解执行handle
+        }, delay)
+        if (callNow) handle.call(self, ...args)
+
+      } else {
+        timer = setTimeout(() => {
+          handle.call(self, ...args)
+        }, delay)
+      }
+    }
+  }
+  // 防抖实例
+  function ajax(content, content2) {
+    console.log('ajax request ' + content + content2)
+  }
+
+  let inputa = document.getElementById('unDebounce')
+  let debounceAjax = debounce(ajax, 500, true)
+  inputa.addEventListener('keyup', function (e) {
+    debounceAjax(e.target.value, 'sssws1')
+  })
+
+
+    function throttle(handle,delay) {
+      
+    }
+
+  // 节流实例
+  let num = 1;
+  const content = document.getElementById('div');
+  function count() {
+    content.innerHTML = num++;
+  };
+  content.onmousemove = debounce(count, 500, true);
+
+
+</script>
+
+</html>
