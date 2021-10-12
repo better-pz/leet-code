@@ -47,32 +47,32 @@
     debounceAjax(e.target.value, 'sssws1')
   })
 
-// 使用定时器,定时一秒钟之后去执行,但是在这1s中不停的调用,不让他的定时器清零重新计时,不会影响当前的结果,还是那1s继续等,等1秒时触发(会出现停止操作还是会触发)
-    function throttle(handle,delay) {
-      let timer
-      return function () {
-        const self = this
-        const args = [...arguments]
-        if (timer) return
-        timer = setTimeout(()=> {
-          handle.call(self,...args)
-          timer = null
-        },delay)
-      } 
+  // 使用定时器,定时一秒钟之后去执行,但是在这1s中不停的调用,不让他的定时器清零重新计时,不会影响当前的结果,还是那1s继续等,等1秒时触发(会出现停止操作还是会触发)
+  function throttle(handle, delay) {
+    let timer
+    return function () {
+      const self = this
+      const args = [...arguments]
+      if (timer) return
+      timer = setTimeout(() => {
+        handle.call(self, ...args)
+        timer = null
+      }, delay)
     }
-// 使用时间戳的形式 可以立即执行一次
-    function throttle2(handle,delay) {
-      let previous  = 0
-      return function () {
-        let now =Date.now()
-        const self = this
-        const args = [...arguments]
-        if (!previous || now - previous >= delay) {
-          handle.call(self,...args)
-          previous = now
-        }
+  }
+  // 使用时间戳的形式 可以立即执行一次
+  function throttle2(handle, delay) {
+    let previous = 0
+    return function () {
+      let now = Date.now()
+      const self = this
+      const args = [...arguments]
+      if (!previous || now - previous >= delay) {
+        handle.call(self, ...args)
+        previous = now
       }
     }
+  }
   // 节流实例
   let num = 1;
   const content = document.getElementById('div');
