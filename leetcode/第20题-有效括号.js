@@ -16,25 +16,25 @@ var isValid = function(s) {
     map.set('(',')')
     map.set('{','}')
     map.set('[',']')
-    for (const x of s) {
-      if (map.has(x)) {
-        track.push(x);
-      }else if (map.get(track.pop())!== x){
-          return false;
-      }
-    }
     // for (const x of s) {
     //   if (map.has(x)) {
     //     track.push(x);
-    //   } else {
-    //     const t = track[track.length - 1];
-    //     if (map.get(t) === x) {
-    //       track.pop();
-    //     } else {
+    //   }else if (map.get(track.pop())!== x){
     //       return false;
-    //     }
     //   }
     // }
+    for (const x of s) {
+      if (map.has(x)) {
+        track.push(x);
+      } else {
+        const t = track[track.length - 1];
+        if (map.get(t) === x) {
+          track.pop();
+        } else {
+          return false;
+        }
+      }
+    }
     return !track.length;
   };
 
