@@ -12,7 +12,7 @@
 var isValid = function(s) {
   if (s.length % 2 === 1) return false;
     const track = []
-    const map = new Map
+    const map = new Map()
     map.set('(',')')
     map.set('{','}')
     map.set('[',']')
@@ -70,4 +70,4 @@ var isValid = function(s) {
 //   return track.length === 0;
 // };
 
-console.log("isValid", isValid("(){{{}}}[[]]"));
+console.log("isValid", isValid("(){{{}}}[[{}]]]]]]]"));
