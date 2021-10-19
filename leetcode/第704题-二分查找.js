@@ -18,11 +18,12 @@
 解释: 2 不存在 nums 中因此返回 -1
  
 
-提示：
+提示：二分查找算法
+1. 定义头尾两个指针 left = 0 ,right = length 中间索引 mid = left + (right - left) / 2
+2. 当left <= right 如果mid上的值等于target, 返回mid, 如果小于targt, left = mid + 1(砍掉左半边)
+如果大于target , right = mid - 1(砍掉右半边)
+3. 如果while 循环结束后都没有找到target , 返回-1
 
-你可以假设 nums 中的所有元素是不重复的。
-n 将在 [1, 10000]之间。
-nums 的每个元素都将在 [-9999, 9999]之间。
  */
 
 
