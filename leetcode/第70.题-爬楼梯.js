@@ -22,15 +22,15 @@ function climbStairs(n) {
 }
 console.log(climbStairs(4));
 
-function climbStairs (n) {
-  if (n===0) return 0
-  let pre = 0
-  let cur = 0 
-  let sum = 1
-  for( let i=1;i<n;i++) {
-    pre = cur
-    cur = sum
-    sum = pre+cur
+function climbStairs(n) {
+  if (n === 0) return 0;
+  let pre = 0;
+  let cur = 0;
+  let sum = 1;
+  for (let i = 1; i < n; i++) {
+    pre = cur;
+    cur = sum;
+    sum = pre + cur;
   }
-  return sum
+  return sum;
 }
