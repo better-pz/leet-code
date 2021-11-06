@@ -23,7 +23,7 @@ var isValid = function(s) {
     //       return false;
     //   }
     // }
-    for (const x of s) {
+    for (let x of s) {
       if (map.has(x)) {
         track.push(x);
       } else {
