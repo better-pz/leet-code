@@ -35,7 +35,6 @@ const search = (nums, target) => {
   while (i <= j) {
     midIndex = Math.floor((i + j) / 2)
     const midValue = nums[ midIndex ]
-
     if (midValue === target) {
       return midIndex
     } else if (midValue < target) {
