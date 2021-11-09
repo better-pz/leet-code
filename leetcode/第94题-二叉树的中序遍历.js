@@ -5,9 +5,24 @@ const inorder1 = (root) => {
   console.log(root.val);
   inorder1(root.right);
 };
-// 中序遍历(非递归)
+var inorderTraversal = function (root) {
+  const res = [];
+  const inorder = (root) => {
+    if (!root) {
+      return;
+    }
+    inorder(root.left);
+    res.push(root.val);
+    inorder(root.right);
+  };
+  inorder(root);
+  return res;
+};
+
+// 中序遍历(非递归,迭代)
 const inorder2 = (root) => {
   if (!root) return;
+  const res = [];
   const stack = [];
   let p = root;
   while (stack.length || p) {
@@ -17,6 +32,8 @@ const inorder2 = (root) => {
     }
     const n = stack.pop();
     console.log(n.val);
+    res.push(n.val);
     p = n.right;
   }
+  return res;
 };
