@@ -45,6 +45,20 @@ const preorder2 = (root) => {
     n.left && stack.push(n.left);
   }
 };
+// 迭代
+var Traversal = function(root) {
+  const stack = [];
+  while (root || stack.length){
+    while(root){
+      stack.push(root);
+      root = root.left;
+    }
+    root = stack.pop();
+    root = root.right;
+  }
+  return res;
+};
+
 // preorder2(binaryTree);
 // 中序遍历(递归)
 const inorder1 = (root) => {
@@ -68,6 +82,25 @@ const inorder2 = (root) => {
     p = n.right;
   }
 };
+// leetcode 迭代
+const inorderTraversal = (root) => {
+  if(!root) return [];
+const res = [];
+const stack = [];
+while(root || stack.length){
+    while(root){
+        stack.push(root)
+        root = root.left;
+    }
+   root = stack.pop();
+   res.push(root.val);
+   root = root.right;
+}
+return res;
+};
+
+
+
 // inorder2(binaryTree)
 // 后序遍历 (递归)
 const postorder1 = (root) => {
@@ -93,4 +126,23 @@ const postorder2 = (root) => {
     console.log(n.val);
   }
 };
+
+
+//  leetcode 迭代
+var postorderTraversal = function(root) {
+  // 初始化数据
+    const res =[];
+    const stack = [];
+    while (root || stack.length){
+      while(root){
+        stack.push(root);
+        res.unshift(root.val);
+        root = root.right;
+      }
+      root = stack.pop();
+      root = root.left;
+    }
+    return res;
+};
+
 postorder2(binaryTree);
