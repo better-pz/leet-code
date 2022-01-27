@@ -6,9 +6,9 @@
   输出：[1,2]
   解释：2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 。
   提示：二分查找算法
-    1. 定义头尾两个指针 left = 0 ,right = length 中间索引 mid = left + (right - left) / 2
-    2. 当left <= right 如果mid上的值等于target, 返回mid, 如果小于targt, left = mid + 1(砍掉左半边)
-    如果大于target , right = mid - 1(砍掉右半边)
+    1. 定义头尾两个指针 left = 0 ,right = length 中间索引 sum = numbers[left] + numbers[right]
+    2. 当left <= right 如果mid上的值等于target, 返回mid, 如果小于targt, left = left + 1(砍掉左半边)
+    如果大于target , right = right - 1(砍掉右半边)
     3. 如果while 循环结束后都没有找到target , 返回-1
  */
     var twoSum = function(numbers, target) {
