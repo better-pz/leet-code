@@ -20,28 +20,3 @@ function debounce(handle, delay, immediate) {
   };
 }
 
-function throttle(handle, delay, immediate) {
-  if (immediate) {
-    let previous = 0;
-    return function() {
-      let now = Date.now();
-      const self = this;
-      const args = [...arguments];
-      if (!previous || now - previous >= delay) {
-        handle.call(self, ...args);
-        previous = now;
-      }
-    };
-  } else {
-    let timer;
-    return function() {
-      const self = this;
-      const args = [...arguments];
-      if (timer) return;
-      timer = setTimeout(() => {
-        handle.call(self, ...args);
-        timer = null;
-      }, delay);
-    };
-  }
-}
