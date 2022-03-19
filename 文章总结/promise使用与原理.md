@@ -70,6 +70,29 @@ const promises = [
 await Promise.allSettled(promises);
 removeLoadingIndicator();
 ```
+手写`Promise.allSettled`
+```js
+Promise.allSettled = function (arr) {
+  let result = []
+  return new Promise ((resolve,reject) => {
+    arr.forEach((item,index) => {
+      Promise.resolve(item).then((res) => {
+        result.push({
+          status:'fulfilled',
+          value:res
+        })
+        result.length === arr.length && resolve(result)
+      }).catch((error) => {
+        result.push({
+          status:'rejected',
+          value:error
+        })
+        result.length === arr.length && resolve(result)
+      })
+    })
+  })
+}
+```
 ## 3. Promise.resolve()
 `Promise.resolve()`将现有对象转为Promise对象
 ```js
@@ -174,3 +197,46 @@ Promise.any([rejected, alsoRejected]).catch(function (results) {
   console.log(results); // [-1, Infinity]
 });
 ```
+## 6. Promise.prototype.finally()
+finally()方法用于指定不管Promise对象最后状态如何,都会执行的操作
+```js
+promise
+.then(result => {···})
+.catch(error => {···})
+.finally(() => {···});
+```
+如上在执行then或catch指定的回调函数以后,都会执行finally方法指定的回调函数
+finally方法的回调函数不会接受任何参数,这也意味着没有办法知道前面的Promise状态的值,这表明finally方法里面的操作与状态无关
+
+finally本质是一then方法的实例
+```js
+promise
+.finally(() => {
+  // 语句
+});
+
+// 等同于
+promise
+.then(
+  result => {
+    // 语句
+    return result;
+  },
+  error => {
+    // 语句
+    throw error;
+  }
+);
+```
+实现
+
+```js
+Promise.prototype.finally = function (callback) {
+  let P = this.constructor;
+  return this.then(
+    value  => P.resolve(callback()).then(() => value),
+    reason => P.resolve(callback()).then(() => { throw reason })
+  );
+};
+```
+如上不管Promise状态如何都会执行回调函数,finally方法**总是返回原来的值**
