@@ -50,4 +50,59 @@ function throttle(fn,delay) {
 }
 ```
 
-s
+# call apply bind
+三者都是用来改变this指向的
+
+1. **call**
+使用:
+```js
+ function.call(thisArg,arg1,grg2,...)
+```
+ + `thisArg` 可选参数,function执行时内部的this指向`thisArg`
+ + arg1,arg2,... 可选参数,传递给function的参数列表
+ + 返回值:在指定的this值和所传递的参数下调用此函数的返回结果
+注意:
+1. function函数将会立即执行
+2. 在执行时,会将函数内部的this指向thisArg
+3. 出thisArg外的所有剩余参数将全部传递给function
+4. 返回function函数执行后的结果
+
+```js
+Function.prototype.myCall = function (context, ...arr) {
+  
+  console.log('调用mycall中的this',this)
+  if (context === null || context === undefined) {
+    context = window
+  }else {
+    context= Object(context)
+  }
+  const specialPrototype = Symbol('特殊属性symbol')
+  context[specialPrototype] = this
+  let result = context[specialPrototype](...arr)
+  delete context[specialPrototype]
+  return result
+} 
+
+```
+
+2. **apply**
+
+注意:
++ 使用apply只支持两个参数,第一个为thisArg,第二个是包括多个参数的数组
+
+```js
+
+Function.prototype.myApply = function (context,arr) {
+  console.log(this)
+  if (context === null || context === undefined) {
+    context = window
+  }else {
+    context= Object(context)
+  }
+  const specialPrototype = Symbol('特殊属性symbol')
+  context[specialPrototype] = this
+  let result = context[specialPrototype](...arr)
+  delete context[specialPrototype]
+  return result
+} 
+```

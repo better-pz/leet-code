@@ -59,6 +59,12 @@ Function.prototype.mybind = function() {
   }
   return fToBind
 }
+
+
+
+
+
+
 const result = text(1,10,100)
 const bindResult = text.mybind({name:'better'},7,77,777)(1)
 console.log('手写bind',result,bindResult)
