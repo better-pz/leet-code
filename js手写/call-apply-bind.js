@@ -7,12 +7,15 @@ Function.prototype.myCall = function (context, ...arr) {
     context = Object(context)
   }
   const specialPrototype = Symbol('特殊属性symbol')
-  context[specialPrototype] = this
+  context[specialPrototype] = this // this指向调用者
+  // context[specialPrototype]执行函数调用时this指向context
   let result = context[specialPrototype](...arr)
   delete context[specialPrototype]
   return result
 }
-
+// context :{
+//   specialPrototype:this->调用者
+// }
 Function.prototype.myApply = function (context, arr) {
   console.log(this)
   if (context === null || context === undefined) {
