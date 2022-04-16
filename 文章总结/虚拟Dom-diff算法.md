@@ -126,6 +126,7 @@ h函数是可以嵌套使用的,从而得到虚拟DOM树
  * @param {string} text 文本
  * @param {dom} elm DOM
  * @returns object
+ children和text只能有一个
  */
 export default function (sel, data, children, text, elm) {
   return { sel, data, children, text, elm }
@@ -227,6 +228,7 @@ export default function patch(oldVnode, newVnode) {
   // 通过 key 和 sel 进行判断
   if (sameVnode(oldVnode, newVnode)) {
     // 是同一个虚拟节点 调用我们写的 patchVnode.js 中的方法
+    patchVnode(oldVnode,Vnode,insertedVnodeQueue)
     ...
   } else {
     // 不是同一虚拟个节点 直接暴力拆掉老节点，换上新的节点
@@ -315,7 +317,7 @@ function sameVnode(oldVnode,newVnode) {
 比较为相同的节点
 
 + key值是否一样
-+ 边签名是否一样
++ 标签签名是否一样
 + 是否都为注释节点
 + 是否都定义了data
 + 当标签为input时,type是否相同
@@ -324,14 +326,115 @@ function sameVnode(oldVnode,newVnode) {
 
 这个是在新的vnode和oldVnode是同一节点的情况下,才会执行的函数,主要是对比节点文本变化或子节点变化
 
+思考的逻辑
+
+1. 如果新的vnode无text(有children)
+   1. 两个都有children 
+   2. 新的有children,老的无chiildren(有text):清空text,添加新的children
+   3. 新的无children,老的有children 无text: 移除children
+   4. 老的有text:清空text
+2. 如果新的vnode有text,如果oldVnode的text不等于新的vnode text,如果oldVndoe text有children 移除老的vnode children,将old text设置成newText
+
 
 这个函数功能
 
 + 找到对应的真实DOM,称为el
-+ 判断newVnode和oldVnode是否指向同一个对象,如果是,那么直接return
-+ 如果他们都有文本节点并且不相等,那么将el的文本节点设置为newVnode的文本节点
-+ 如果oldVnode的ziji
++ 判断vnode和oldVnode是否指向同一个对象,即两者的引用地址是一样的,就表示节点没有变化,直接返回
++ 如果oldVnode的isAsyncPlaceholder存在,就跳过异步组件的检查,直接返回
++ 如果oldVnode和vnode都是静态节点,并且有一样的key,并且vnode是克隆节点或者v-once指令控制的节点时,把oldVnode.elm和oldVnode.child都复制到vnode上,然后返回
++ 如果vnode不是文本节点也不是注释节点的情况下
+  + 如果vnode和oldVnode都有子节点,调用的updateChildren更新
+  + 如果只有vnode有子节点,就调用addVnodes删除该子节点
+  + 如果vnode文本是undefined,就删除vnode.elm文本
++ 如果vnode是文本节点但是和oldVnode文本内容不一样,就更新文本
 
+
+```js
+  function patchVnode (
+    oldVnode, // 老的虚拟 DOM 节点
+    vnode, // 新的虚拟 DOM 节点
+    insertedVnodeQueue, // 插入节点的队列
+    ownerArray, // 节点数组
+    index, // 当前节点的下标
+    removeOnly // 只有在
+  ) {
+    // 新老节点引用地址是一样的，直接返回
+    // 比如 props 没有改变的时候，子组件就不做渲染，直接复用
+    if (oldVnode === vnode) return
+    
+    // 新的 vnode 真实的 DOM 元素
+    if (isDef(vnode.elm) && isDef(ownerArray)) {
+      // clone reused vnode
+      vnode = ownerArray[index] = cloneVNode(vnode)
+    }
+
+    const elm = vnode.elm = oldVnode.elm
+    // 如果当前节点是注释或 v-if 的，或者是异步函数，就跳过检查异步组件
+    if (isTrue(oldVnode.isAsyncPlaceholder)) {
+      if (isDef(vnode.asyncFactory.resolved)) {
+        hydrate(oldVnode.elm, vnode, insertedVnodeQueue)
+      } else {
+        vnode.isAsyncPlaceholder = true
+      }
+      return
+    }
+    // 当前节点是静态节点的时候，key 也一样，或者有 v-once 的时候，就直接赋值返回
+    if (isTrue(vnode.isStatic) &&
+      isTrue(oldVnode.isStatic) &&
+      vnode.key === oldVnode.key &&
+      (isTrue(vnode.isCloned) || isTrue(vnode.isOnce))
+    ) {
+      vnode.componentInstance = oldVnode.componentInstance
+      return
+    }
+    // hook 相关的不用管
+    let i
+    const data = vnode.data
+    if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
+      i(oldVnode, vnode)
+    }
+    // 获取子元素列表
+    const oldCh = oldVnode.children
+    const ch = vnode.children
+    
+    if (isDef(data) && isPatchable(vnode)) {
+      // 遍历调用 update 更新 oldVnode 所有属性，比如 class,style,attrs,domProps,events...
+      // 这里的 update 钩子函数是 vnode 本身的钩子函数
+      for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
+      // 这里的 update 钩子函数是我们传过来的函数
+      if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
+    }
+    // 如果新节点不是文本节点，也就是说有子节点
+    if (isUndef(vnode.text)) {
+      // 如果新老节点都有子节点
+      if (isDef(oldCh) && isDef(ch)) {
+        // 如果新老节点的子节点不一样，就执行 updateChildren 函数，对比子节点
+        if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
+      } else if (isDef(ch)) {
+        // 如果新节点有子节点的话，就是说老节点没有子节点
+        
+        // 如果老节点文本节点，就是说没有子节点，就清空
+        if (isDef(oldVnode.text)) nodeOps.setTextContent(elm, '')
+        // 添加子节点
+        addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue)
+      } else if (isDef(oldCh)) {
+        // 如果新节点没有子节点，老节点有子节点，就删除
+        removeVnodes(oldCh, 0, oldCh.length - 1)
+      } else if (isDef(oldVnode.text)) {
+        // 如果老节点是文本节点，就清空
+        nodeOps.setTextContent(elm, '')
+      }
+    } else if (oldVnode.text !== vnode.text) {
+      // 新老节点都是文本节点，且文本不一样，就更新文本
+      nodeOps.setTextContent(elm, vnode.text)
+    }
+    if (isDef(data)) {
+      // 执行 postpatch 钩子
+      if (isDef(i = data.hook) && isDef(i = i.postpatch)) i(oldVnode, vnode)
+    }
+  }
+
+```
 ### updateChildren
 
 diff算法的子节点更新策略
@@ -512,3 +615,11 @@ export default function updateChildren(parentElm, oldCh, newCh) {
 
 
 ```
+
+# vue3 虚拟dom
++ 事件缓存
++ 添加静态标记
++ 静态提升
++ 使用最长递增子序列优化了对比流程:Vue2在updateChildren()函数里对比变更,Vue3中这一块逻辑在patchKeyChildren()函数里
+
+## 事件缓存
