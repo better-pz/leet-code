@@ -1,3 +1,4 @@
+// 中序遍历"左根右
 // 中序遍历(递归)
 const inorder1 = (root) => {
   if (!root) return;
@@ -22,18 +23,20 @@ var inorderTraversal = function (root) {
 // 中序遍历(非递归,迭代)
 const inorder2 = (root) => {
   if (!root) return;
-  const res = [];
-  const stack = [];
-  let p = root;
-  while (stack.length || p) {
-    while (p) {
-      stack.push(p);
-      p = p.left;
-    }
-    const n = stack.pop();
-    console.log(n.val);
-    res.push(n.val);
-    p = n.right;
+  const res = []
+  const track = []
+  // let p = root
+  while (track.length ||root) {
+      // 把左子树全入栈
+      while (root) {
+          track.push(root)
+          root = root.left
+      }
+      root = track.pop()
+      res.push(root.val)
+      // 遍历根节点左边的节点的右侧
+      root = root.right
+      console.log('root',root)
   }
-  return res;
+  return res
 };
