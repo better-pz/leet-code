@@ -27,6 +27,7 @@ const binaryTree = {
     },
   },
 };
+// 先序遍历:根左右
 // 先序(遍历)
 const preorder1 = (root) => {
   if (!root) return;
@@ -60,6 +61,7 @@ var Traversal = function(root) {
 };
 
 // preorder2(binaryTree);
+// 中序遍历:左中右
 // 中序遍历(递归)
 const inorder1 = (root) => {
   if (!root) return;
