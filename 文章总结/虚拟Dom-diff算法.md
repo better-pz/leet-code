@@ -197,21 +197,18 @@ export default function h(a, b, c) {
 + hydrating:是不是要和真实DOM混合,服务器渲染的会用
 + removeOnly:transition-group会用到
 逻辑流程
-1. vnode不存在,oldVnode存在,就删掉oldVnode
-2. vnode存在,oldVnode不存在,就创建vnode
-3. 两个都存在的话,通过sameVnode函数对比是不是同一节点
-
-  + 如果是同一节点的话patchVnode进行后续的对比节点变化或子节点变化
-  + 如果是同一节点,把vnode挂载到oldVnode的父元素下
-    + 如果组件的根节点被替换,就遍历更新父节点,然后删掉旧的节点
-    + 如果是服务端渲染就用hydrating把oldVnode和真实DOM混合
+1. `vnode`不存在,`oldVnode`存在,就删掉`oldVnode`
+2. `vnode`存在,`oldVnode`不存在,就创建`vnode`
+3. 两个都存在的话,通过`sameVnode`函数对比是不是同一节点
+     + 如果是同一节点的话`patchVnode`进行后续的对比节点变化或子节点变化
+     + 如果是同一节点,把`vnode`挂载到`oldVnode`的父元素下
+       + 如果组件的根节点被替换,就遍历更新父节点,然后删掉旧的节点
+       + 如果是服务端渲染就用`hydrating`把`oldVnode`和真实DOM混合
 ```js
 /* patch.js */
 
 // 导入 vnode
 import vnode from './vnode'
-
-
 // 导出 patch
 /**
  *
