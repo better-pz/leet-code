@@ -150,6 +150,20 @@ p.then(function (s) {
 ```js
 const p = Promise.race([p1,p2,p3])
 ```
+
+手写
+
+```js
+function promiseRace(taskList) {
+
+    return new Promise((resolve, reject) => {
+
+        taskList.forEach(task => task.then(res => resolve(res)))
+
+    })
+
+}
+```
 只要数组中有一个实例率先发生改变状态,p的状态就跟这改变,那个率改变的Pormise实例的返回值就传递给评p的回调函数
 ## 5. Promise.any()
 该方法接收一组Promise实例作为参数包装一个新的Promise实例返回
