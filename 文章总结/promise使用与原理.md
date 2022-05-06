@@ -58,7 +58,7 @@ Promise.all = function (arr) {
 ```
 
 ## 2. Promise.allSettled()
-有时候希望等到一组异步操作都结束了不管每一个操作成功还是失败,再进行下一步操作,但是使用Promise.all()方法只适合所有异步操作都成功的情况,如果有一个操作失败就无法满足要求,,所以在ES2020中引入了allSettled()方法来确定一组异步是否结束了(不管成功还是失败).
+有时候希望等到一组异步操作都结束了不管每一个操作成功还是失败,再进行下一步操作,但是使用Promise.all()方法只适合所有异步操作都成功的情况,如果有一个操作失败就无法满足要求,所以在ES2020中引入了allSettled()方法来确定一组异步是否结束了(不管成功还是失败).
 Promise.allSettled()方法接受一个数组作为参数,数组的每一项都是一个Promise对象,返回一个新的Promise对象,只有等到参数数组的所有的Primise对象都发生状态改变,返回的Promise对象才会发生状态变更
 ```js
 const promises = [
@@ -159,7 +159,7 @@ function promiseRace(taskList) {
     return new Promise((resolve, reject) => {
 
         taskList.forEach(task => task.then(res => resolve(res)))
-
+ 
     })
 
 }

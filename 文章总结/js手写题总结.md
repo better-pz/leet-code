@@ -1,16 +1,33 @@
 # 防抖节流
 
 ## 防抖: 当事件频繁
+使用场景: 输入框输入搜索,频繁点击请求接口
+
+效果: 不是每次操作后执行函数.在频繁操作的最后一次操作结束后在设置的时间内没有触发操作时才执行回调
+
+可以考虑两种思路
+
+1. 立即执行: 在第一次触发事件的时候立即执行当前操作的回调,后面的操作在最后一次操作结束后在设置的时间内没有触发操作时才执行回调
+2. 无立即执行: 按最后一次操作结束后的规定时间执行
+
 ```js
-function debounce(fn,delay) {
+function debounce(fn,delay,immediate) {
   let timer //利用闭包保存同一个timer
   return function () {
     let self = this
     let arg = arguments
     clearTimeout(timer)
-    timer =  setTimeout(()=> {
-      fn.apply(self,arg)
-    },delay)
+    if(immediate) {
+      const callNow = !timer
+      timer = setTimeOut(()=> {
+        timer = null
+      },delay)
+      if(callNow) fn.apply(self.arg)
+    }else {
+      timer =  setTimeout(()=> {
+        fn.apply(self,arg)
+      },delay)
+    }
   }
 }
 ```
@@ -350,6 +367,11 @@ console.log("deeCloneWhile", deepResult3);
 ```
 
 # promise
+## Promise.allSettled
+**特点**
+接收一个数组作为参数,数组的每一项都是一个`Promise`对象,返回一个新的`Promise`对象,只有等到参数数组的所有的`Promise`对象都发生状态改变,返回的`Promise`对象才会发生变更
+
+
 ```js
 Promise.allSettled = function (arr) {
   let result = []
@@ -372,6 +394,9 @@ Promise.allSettled = function (arr) {
   })
 }
 ```
+## Promise.all()
+
+`Promise.all()`方法用于将多个promise实例包装成一个新的Promise实例
 ```js
 Promise.all = function (arr) {
   let index = 0, result = []
