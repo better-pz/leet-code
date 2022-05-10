@@ -417,3 +417,30 @@ Promise.all = function (arr) {
   })
 }
 ```
+# 手写new关键字
+## 作用 
+创建一个用户定义的对象类型的实例或者具有构造函数的内置对象的实例
+
+## 特点
+可以通过new 一个构造函数的方式来创建一个对象实例,但是构造函数的差异导致创建的实例有一定的不同
+
+构造函数的返回值不同
+
+1. 无返回值
+2. 返回一个对象
+3. 返回一个非对象
+
+```js
+// new关键字可以创建对象的实例
+// 产生一个新的对象
+function myNew  (fn,...args) {
+  const obj = new Object()
+  obj._proto_ = fn.prototype
+  // Object.create()方法创建一个新对象,使用现有的对象来提供新创建对象的_proto_
+  // const obj = Object.create(fn.prototype)
+
+  // 执行fn并把fn中的this指向新创建的对象
+  let res = fn.apply(obj,args)
+  return typeof ret === 'object' ? ret || obj : obj;
+}
+```
