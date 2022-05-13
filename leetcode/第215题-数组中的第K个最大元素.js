@@ -11,6 +11,10 @@
   2. 当堆的容量超过k, 就删除堆顶
   
  */
+
+  // 简单写法:快速排序+通过k-1的索引来获取数据
+  // 堆排序
+  
 var findKthLargest = function(nums, k) {
   
 };
