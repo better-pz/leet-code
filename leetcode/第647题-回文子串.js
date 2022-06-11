@@ -12,5 +12,10 @@
  * @return {number}
  */
 var countSubstrings = function(s) {
-
+  const n  = s.length
+  let sum = 0
+  function check(left,right) {
+    let count = 0
+    
+  }
 };
