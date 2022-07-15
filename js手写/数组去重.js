@@ -20,10 +20,24 @@ function distinct (array) {
 //   console.log(111,array)
 // }
 
-// set数据结构
+// 3.set数据结构
 // function  distinct (array) {
 //   return Array.from(new Set(array))
 // }
-const arr = [6,7,9,9,8,7,5]
-distinct(arr)
-console.log(arr)
+
+
+
+const unique = arr => {
+  for (let i = 0; i < arr.length; i++) {
+    for(let j = i+1; j < arr.length; j++) {
+      if (arr[i]===arr[j]) {
+        arr.splice(i,1)
+        i--
+      }
+    }
+  }
+  return arr
+}
+const arr = [6,7,9,9,8,7,5,7,5,5]
+// distinct(arr)
+console.log(unique(arr))
